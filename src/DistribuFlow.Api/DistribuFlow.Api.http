@@ -1,0 +1,55 @@
+@host = http://localhost:5080
+
+### Health / index
+GET {{host}}/
+
+### Search products (Elasticsearch + Redis cache-aside)
+GET {{host}}/catalog/products/search?q=laptop
+
+### Fuzzy search (typo tolerated by ES fuzziness)
+GET {{host}}/catalog/products/search?q=keybord
+
+### Index a new product
+POST {{host}}/catalog/products
+Content-Type: application/json
+
+{
+  "name": "USB-C Hub",
+  "description": "7-in-1 USB-C hub with HDMI and ethernet",
+  "category": "Accessories",
+  "price": 59,
+  "tags": ["usb-c", "hub", "developer"]
+}
+
+### Place an order that SUCCEEDS (stock available) -> saga completes it
+# productId values match the seeded stock/catalog.
+POST {{host}}/orders
+Content-Type: application/json
+
+{
+  "customerName": "Acme Corp",
+  "lines": [
+    { "productId": "11111111-0000-0000-0000-000000000001", "productName": "Pro Laptop 16", "quantity": 2, "unitPrice": 2499 },
+    { "productId": "11111111-0000-0000-0000-000000000002", "productName": "Wireless Mouse", "quantity": 2, "unitPrice": 39 }
+  ]
+}
+
+### Place an order that FAILS stock (only 3 desks in stock) -> saga COMPENSATES (cancels)
+POST {{host}}/orders
+Content-Type: application/json
+
+{
+  "customerName": "Bulk Buyer",
+  "lines": [
+    { "productId": "11111111-0000-0000-0000-000000000003", "productName": "Standing Desk", "quantity": 99, "unitPrice": 599 }
+  ]
+}
+
+### Get an order by id (replace with the id returned above). Status -> Completed or Cancelled.
+GET {{host}}/orders/REPLACE_WITH_ORDER_ID
+
+### Inventory levels (watch QuantityReserved change)
+GET {{host}}/inventory/stock
+
+### Shipments (created for successful orders)
+GET {{host}}/shipping/shipments
