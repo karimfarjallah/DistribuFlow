@@ -21,7 +21,7 @@ public sealed class SearchCache(IConnectionMultiplexer? redis, ILogger<SearchCac
             var db = redis.GetDatabase();
             var cached = await db.StringGetAsync($"search:{key}");
             return cached.HasValue
-                ? JsonSerializer.Deserialize<List<Product>>(cached!)
+                ? JsonSerializer.Deserialize<List<Product>>((string)cached!)
                 : null;
         }
         catch (Exception ex) { logger.LogDebug(ex, "Redis GET skipped"); return null; }

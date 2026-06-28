@@ -27,7 +27,7 @@ public static class CatalogModule
         }
         catch
         {
-            services.AddSingleton<IConnectionMultiplexer?>(_ => null);
+            services.AddSingleton<IConnectionMultiplexer>(_ => null!);
         }
         services.AddSingleton<SearchCache>();
 
