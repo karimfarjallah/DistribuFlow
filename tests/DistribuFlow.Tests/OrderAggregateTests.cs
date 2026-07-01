@@ -18,7 +18,7 @@ public class OrderAggregateTests
     [Fact]
     public void Create_computes_total_from_lines()
     {
-        var order = Order.Create("Acme", new[] { Line(2, 10m), Line(1, 5m) });
+        var order = Order.Create("Acme", [Line(2, 10m), Line(1, 5m)]);
 
         order.Total.Should().Be(25m);
         order.Status.Should().Be(OrderStatus.Pending);
@@ -28,7 +28,7 @@ public class OrderAggregateTests
     [Fact]
     public void Create_raises_OrderPlaced_event()
     {
-        var order = Order.Create("Acme", new[] { Line(1, 99m) });
+        var order = Order.Create("Acme", [Line(1, 99m)]);
 
         order.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<OrderPlacedIntegrationEvent>();
@@ -41,7 +41,7 @@ public class OrderAggregateTests
     [Fact]
     public void Status_transitions_follow_the_happy_path()
     {
-        var order = Order.Create("Acme", new[] { Line(1, 1m) });
+        var order = Order.Create("Acme", [Line(1, 1m)]);
 
         order.MarkStockReserved();
         order.Status.Should().Be(OrderStatus.StockReserved);
@@ -54,7 +54,7 @@ public class OrderAggregateTests
     [Fact]
     public void Cancel_sets_cancelled_status()
     {
-        var order = Order.Create("Acme", new[] { Line(1, 1m) });
+        var order = Order.Create("Acme", [Line(1, 1m)]);
         order.Cancel();
         order.Status.Should().Be(OrderStatus.Cancelled);
     }
@@ -62,7 +62,7 @@ public class OrderAggregateTests
     [Fact]
     public void ClearDomainEvents_empties_the_collection()
     {
-        var order = Order.Create("Acme", new[] { Line(1, 1m) });
+        var order = Order.Create("Acme", [Line(1, 1m)]);
         order.ClearDomainEvents();
         order.DomainEvents.Should().BeEmpty();
     }

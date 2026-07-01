@@ -161,7 +161,7 @@ Covers the order aggregate's behavior (total calculation, event raising, status 
 
 ---
 
-## Notes & honest caveats
+## Notes
 
 - Package versions are pinned to known-good releases in `Directory.Packages.props`. If a `dotnet restore` complains about a specific version, bump that single line to the latest matching minor — the code doesn't depend on anything exotic.
 - `EnsureCreated()` is used to create the schema for a frictionless demo. **Production uses EF migrations** (`dotnet ef migrations add` per module) for versioned, reviewable schema changes.
