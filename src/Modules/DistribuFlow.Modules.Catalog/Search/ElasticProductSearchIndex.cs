@@ -37,7 +37,7 @@ public sealed class ElasticProductSearchIndex(ElasticsearchClient client, ILogge
     public async Task<IReadOnlyList<Product>> SearchAsync(string query, int size, CancellationToken ct = default)
     {
         var response = await client.SearchAsync<Product>(s => s
-            .Index(IndexName)
+            .Indices(IndexName)
             .Size(size)
             .Query(q => q
                 .MultiMatch(mm => mm
