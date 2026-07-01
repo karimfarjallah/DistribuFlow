@@ -82,7 +82,7 @@ The API starts on **http://localhost:5080**. Startup retries the DB connection, 
 
 ---
 
-## Demo script (what to click in the interview)
+## Demo script
 
 Open `src/DistribuFlow.Api/DistribuFlow.Api.http` in VS / Rider / VS Code (REST Client) — or use the curl below.
 
@@ -151,7 +151,7 @@ Covers the order aggregate's behavior (total calculation, event raising, status 
 
 ---
 
-## Talking points (how to present this)
+## Talking points
 
 - **"I separate the write path from the read path."** Orders/Inventory/Shipping use SQL Server as the source of truth; the Catalog read model is Elasticsearch. That's exactly the shape of a search/recommendation product.
 - **"I never lose an event."** The outbox writes the event in the same transaction as the state change, so a crash between commit and publish can't drop it — the dispatcher just picks it up on the next poll. At-least-once delivery, made safe by idempotent consumers.
